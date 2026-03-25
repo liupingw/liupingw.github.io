@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Willow | HCI Researcher</title>
+
+<!-- =====================================================
+FINAL ACADEMIC WEBSITE ARCHITECTURE (PI LEVEL)
+
+FILES YOU SHOULD HAVE:
+
+index.html (this file)
+papers.bib (all publications)
+news.json (news list)
+photo.jpg
+cv.pdf
+
+FOLDER STRUCTURE:
+
+/willow.github.io
+  index.html
+  papers.bib
+  news.json
+  photo.jpg
+  cv.pdf
+
+WORKFLOW (PROFESSIONAL WAY):
+
+When new paper accepted:
+1 add BibTeX to papers.bib
+2 add one news line
+3 done
+
+NO HTML editing needed anymore.
+
+EXPORT FROM GOOGLE SCHOLAR:
+Scholar → export BibTeX → paste into papers.bib
+
+This is how many HCI professors maintain sites.
+===================================================== -->
+
+<style>
+body{
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
+margin:0;
+background:#f6f8fb;
+color:#222;
+line-height:1.7;
+}
+
+.layout{
+display:flex;
+max-width:1200px;
+margin:auto;
+}
+
+.sidebar{
+width:300px;
+background:white;
+min-height:100vh;
+padding:40px 30px;
+box-shadow:0 0 10px rgba(0,0,0,0.05);
+position:sticky;
+top:0;
+}
+
+.photo{
+width:170px;
+height:170px;
+background:#ddd;
+border-radius:12px;
+margin-bottom:20px;
+}
+
+.name{
+font-size:30px;
+font-weight:700;
+}
+
+.title{
+color:#666;
+margin:15px 0;
+}
+
+.main{
+flex:1;
+padding:50px 60px;
+}
+
+h2{
+font-size:26px;
+margin-top:50px;
+border-bottom:1px solid #e5e5e5;
+padding-bottom:8px;
+}
+
+.news{
+background:white;
+padding:14px;
+border-radius:8px;
+margin-bottom:10px;
+box-shadow:0 0 5px rgba(0,0,0,0.05);
+}
+
+.paper{
+background:white;
+padding:14px;
+border-radius:8px;
+margin-bottom:10px;
+box-shadow:0 0 5px rgba(0,0,0,0.05);
+}
+
+.year{
+margin-top:25px;
+font-weight:600;
+color:#777;
+}
+
+.footer{
+margin-top:80px;
+color:#777;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<div class="sidebar">
+
+<div class="photo"></div>
+
+<div class="name">Willow</div>
+
+<div class="title">
+HCI Researcher<br>
+Human‑AI Interaction<br>
+Affective Computing
+</div>
+
+<div>
+<a href="#">Email</a><br>
+<a href="#">Google Scholar</a><br>
+<a href="#">GitHub</a><br>
+<a href="cv.pdf">CV</a>
+</div>
+
+</div>
+
+<div class="main">
+
+<h2>About</h2>
+
+<p>
+Researcher in Human‑Computer Interaction focusing on intelligent education, multimodal interaction and Human‑AI competition based learning.
+</p>
+
+<h2>News</h2>
+
+<div id="news"></div>
+
+<h2>Publications</h2>
+
+<div id="pubs"></div>
+
+<h2>Contact</h2>
+
+<p>
+Email your_email@domain.com
+</p>
+
+<div class="footer">
+Last update 2026
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* ===== LOAD NEWS ===== */
+
+fetch('news.json')
+.then(r=>r.json())
+.then(data=>{
+let container=document.getElementById("news");
+
+data.forEach(n=>{
+let div=document.createElement("div");
+div.className="news";
+div.textContent=n;
+container.appendChild(div);
+});
+});
+
+/* ===== LOAD BIBTEX ===== */
+
+fetch('papers.bib')
+.then(r=>r.text())
+.then(text=>{
+
+let entries=text.split('@').slice(1);
+let papers=[];
+
+entries.forEach(e=>{
+
+let yearMatch=e.match(/year={(.*?)}/);
+let titleMatch=e.match(/title={(.*?)}/);
+let venueMatch=e.match(/booktitle={(.*?)}/) || e.match(/journal={(.*?)}/);
+
+if(yearMatch && titleMatch){
+
+papers.push({
+
+year:yearMatch[1],
+title:titleMatch[1],
+venue:venueMatch?venueMatch[1]:""
+
+});
+
+}
+
+});
+
+papers.sort((a,b)=>b.year-a.year);
+
+let container=document.getElementById("pubs");
+
+let currentYear="";
+
+papers.forEach(p=>{
+
+if(p.year!=currentYear){
+
+currentYear=p.year;
+
+let y=document.createElement("div");
+y.className="year";
+y.textContent=currentYear;
+container.appendChild(y);
+
+}
+
+let div=document.createElement("div");
+div.className="paper";
+div.innerHTML="<b>"+p.title+"</b><br>"+p.venue;
+
+container.appendChild(div);
+
+});
+
+});
+
+</script>
+
+</body>
+</html>
+
+
+<!-- ================= SAMPLE papers.bib =================
+
+@inproceedings{willow2026,
+title={Human-AI Competition Improves Learning Engagement},
+author={Willow},
+booktitle={CHI},
+year={2026}
+}
+
+@article{willow2025,
+title={Designing Competitive AI Opponents},
+author={Willow},
+journal={Frontiers in Psychology},
+year={2025}
+}
+
+======================================================== -->
+
+
+<!-- ================= SAMPLE news.json =================
+
+[
+"2026 CHI paper accepted",
+"2025 Frontiers paper published"
+]
+
+======================================================== -->
